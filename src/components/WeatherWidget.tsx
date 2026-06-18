@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { CloudSun, Droplets, Wind, Thermometer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import React from "react";
+import { getCurrentWeather, WeatherData } from "@/services/api";
 
 interface WeatherWidgetProps {
   compact?: boolean;
@@ -9,6 +11,31 @@ interface WeatherWidgetProps {
 
 export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
   const { t } = useTranslation();
+  const [weather, setWeather] = React.useState<WeatherData | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!navigator.geolocation) {
+      setError('Geolocation not supported');
+      setLoading(false);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        getCurrentWeather(latitude, longitude)
+          .then(setWeather)
+          .catch((e) => setError(e.message))
+          .finally(() => setLoading(false));
+      },
+      (err) => {
+        setError(err.message);
+        setLoading(false);
+      },
+    );
+  }, []);
+
 
   if (compact) {
     return (
@@ -20,8 +47,17 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
           <CloudSun className="h-7 w-7 text-sky-500" />
         </div>
         <div className="flex-1">
-          <p className="text-2xl font-bold text-foreground">32°C</p>
-          <p className="text-[11px] text-muted-foreground">Partly Cloudy • Guntur</p>
+        {loading ? (
+          <span className="text-2xl font-bold text-foreground">Loading...</span>
+        ) : error ? (
+          <span className="text-2xl font-bold text-destructive">Error</span>
+        ) : (
+          <>
+            <p className="text-2xl font-bold text-foreground">{weather?.temp ?? '--'}°C</p>
+            <p className="text-[11px] text-muted-foreground">{weather?.condition ?? '—'} • Guntur</p>
+          </>
+        )}
+
         </div>
         <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
           <Droplets className="h-3.5 w-3.5" /> 65%
@@ -41,14 +77,20 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
             {t("weather.title")} • Guntur, AP
           </p>
           <div className="mt-1 flex items-baseline gap-1">
-            <span className="text-4xl font-bold text-foreground tracking-tight">
-              32
-            </span>
-            <span className="text-lg font-medium text-muted-foreground">°C</span>
+          {loading ? (
+            <span className="text-4xl font-bold text-foreground tracking-tight">--</span>
+          ) : error ? (
+            <span className="text-4xl font-bold text-destructive tracking-tight">ERR</span>
+          ) : (
+            <span className="text-4xl font-bold text-foreground tracking-tight">{weather?.temp ?? '--'}</span>
+          )}
+          <span className="text-lg font-medium text-muted-foreground">°C</span>
+
           </div>
           <p className="mt-0.5 text-[12px] text-muted-foreground">
-            Partly Cloudy • {t("weather.feelsLike")} 34°C
+            {weather?.condition ?? '—'} • {t('weather.feelsLike')} {weather?.feelsLike ?? '--'}°C
           </p>
+
         </div>
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-500/15">
           <CloudSun className="h-8 w-8 text-sky-500" />
@@ -56,9 +98,10 @@ export default function WeatherWidget({ compact = false }: WeatherWidgetProps) {
       </div>
 
       <div className="mt-4 flex items-center gap-4 border-t border-sky-100 pt-3">
-        <StatItem icon={Droplets} label={t("weather.humidity")} value="65%" />
-        <StatItem icon={Wind} label={t("weather.wind")} value="12 km/h" />
-        <StatItem icon={Thermometer} label={t("weather.rainfall")} value="2.4 mm" />
+          <StatItem icon={Droplets} label={t("weather.humidity")} value={weather?.humidity ? `${weather.humidity}%` : '--'} />
+          <StatItem icon={Wind} label={t("weather.wind")} value={weather?.windSpeed ? `${weather.windSpeed} km/h` : '--'} />
+          <StatItem icon={Thermometer} label={t("weather.rainfall")} value={weather?.rainfall ? `${weather.rainfall} mm` : '--'} />
+
       </div>
     </Link>
   );

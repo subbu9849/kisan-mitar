@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import SimpleLanding from "@/pages/SimpleLanding";
 
-import AppLayout from "@/components/layout/AppLayout";
+import AppLayout from "@/components/AppLayout";
 import { useAuthStore } from "@/store/authStore";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
@@ -88,19 +88,21 @@ const App = () => (
               }
             />
 
-            {/* Simple landing and main routes */}
-            <Route path="/" element={<SimpleLanding />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/weather" element={<WeatherPage />} />
-            <Route path="/market" element={<MarketPage />} />
-            <Route path="/disease" element={<DiseaseDetectionPage />} />
-            <Route path="/farm" element={<FarmManagerPage />} />
-            <Route path="/community" element={<CommunityPage />} />
-            <Route path="/schemes" element={<SchemesPage />} />
-            <Route path="/crop-advisory" element={<CropAdvisoryPage />} />
-            <Route path="/experts" element={<ExpertsPage />} />
-            <Route path="/marketplace" element={<MarketplacePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            {/* Simple landing and main routes wrapped in layout */}
+            <Route element={<AppLayout />}>
+              <Route index element={<SimpleLanding />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="weather" element={<WeatherPage />} />
+              <Route path="market" element={<MarketPage />} />
+              <Route path="disease" element={<DiseaseDetectionPage />} />
+              <Route path="farm" element={<FarmManagerPage />} />
+              <Route path="community" element={<CommunityPage />} />
+              <Route path="schemes" element={<SchemesPage />} />
+              <Route path="crop-advisory" element={<CropAdvisoryPage />} />
+              <Route path="experts" element={<ExpertsPage />} />
+              <Route path="marketplace" element={<MarketplacePage />} />
+              <Route path="profile" element={<ProfilePage />} />
+            </Route>
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />

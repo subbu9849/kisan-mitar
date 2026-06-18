@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "49c0598f-82a1-4bf4-a17a-b1a43929ffc2"
+      }
+    },
+    "owner": "sk.subbu",
+    "slug": "esa",
+    "android": {
+      "package": "com.sk.subbu.esa"
+    }
+  }
+}
