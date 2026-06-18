@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* KisanSeva — Green & Gold Agricultural Theme */
+@layer base {
+  :root {
+    --background: 40 30% 97%;
+    --foreground: 150 15% 12%;
+
+    --card: 40 25% 99%;
+    --card-foreground: 150 15% 12%;
+
+    --popover: 40 25% 99%;
+    --popover-foreground: 150 15% 12%;
+
+    --primary: 142 55% 32%;
+    --primary-foreground: 40 30% 98%;
+
+    --secondary: 42 80% 52%;
+    --secondary-foreground: 150 15% 12%;
+
+    --muted: 140 15% 92%;
+    --muted-foreground: 150 8% 40%;
+
+    --accent: 42 85% 65%;
+    --accent-foreground: 150 15% 12%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 40 30% 98%;
+
+    --border: 140 15% 85%;
+    --input: 140 15% 85%;
+    --ring: 142 55% 32%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 142 55% 32%;
+    --sidebar-foreground: 40 30% 98%;
+    --sidebar-primary: 42 80% 52%;
+    --sidebar-primary-foreground: 150 15% 12%;
+    --sidebar-accent: 142 40% 25%;
+    --sidebar-accent-foreground: 40 30% 98%;
+    --sidebar-border: 142 40% 25%;
+    --sidebar-ring: 42 80% 52%;
+
+    /* KisanSeva custom tokens */
+    --kisan-green: 142 55% 32%;
+    --kisan-gold: 42 80% 52%;
+    --kisan-earth: 30 25% 45%;
+    --kisan-sky: 200 60% 55%;
+    --kisan-warm: 35 70% 60%;
+  }
+
+  .dark {
+    --background: 150 15% 8%;
+    --foreground: 40 25% 92%;
+
+    --card: 150 12% 12%;
+    --card-foreground: 40 25% 92%;
+
+    --popover: 150 12% 12%;
+    --popover-foreground: 40 25% 92%;
+
+    --primary: 142 50% 41%;
+    --primary-foreground: 40 30% 98%;
+
+    --secondary: 42 75% 48%;
+    --secondary-foreground: 150 15% 12%;
+
+    --muted: 150 10% 18%;
+    --muted-foreground: 140 8% 55%;
+
+    --accent: 42 70% 35%;
+    --accent-foreground: 40 30% 98%;
+
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 40 30% 98%;
+
+    --border: 150 10% 22%;
+    --input: 150 10% 22%;
+    --ring: 142 50% 41%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", "Noto Sans Telugu", system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Telugu font support */
+  @font-face {
+    font-family: "Noto Sans Telugu";
+    src: local("Noto Sans Telugu");
+    font-display: swap;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .kisan-gradient {
+    background: linear-gradient(135deg, hsl(142, 55%, 32%), hsl(142, 50%, 28%));
+  }
+
+  .kisan-gold-gradient {
+    background: linear-gradient(135deg, hsl(42, 80%, 52%), hsl(38, 90%, 48%));
+  }
+
+  .kisan-card {
+    @apply bg-card rounded-2xl border border-border/50 shadow-sm;
+  }
+
+  .kisan-glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20;
+  }
+}
+
+/* PWA safe area support */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Falling leaves animation */
+@keyframes leaf-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg) translateX(0px);
+    opacity: 0;
+  }
+  5% {
+    opacity: var(--leaf-opacity, 0.1);
+  }
+  90% {
+    opacity: var(--leaf-opacity, 0.1);
+  }
+  100% {
+    transform: translateY(110vh) rotate(calc(var(--rotation) + 120deg)) translateX(var(--sway, 30px));
+    opacity: 0;
+  }
+}
+
+.falling-leaf {
+  --leaf-opacity: 0.1;
+  position: absolute;
+  top: -5%;
+  animation: leaf-fall linear infinite;
+  will-change: transform, opacity;
+}
+
+/* Voice assistant animations */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes waveform {
+  0%, 100% {
+    height: 4px;
+  }
+  50% {
+    height: 20px;
+  }
+}
+
+.voice-pulse-ring {
+  animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.voice-waveform-bar {
+  animation: waveform 1.2s ease-in-out infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(140, 15%, 80%);
+  border-radius: 999px;
+}
+
+/* Bottom nav safe area */
+.bottom-nav-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 8px), 8px);
+}
